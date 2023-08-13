@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Rating</title>
+    <style>
+        /* style.css */
+.rating {
+    display: inline-block;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    background-image: url('../static/stars/empty_star.png'); /* Empty star image */
+    background-size: cover;
+    background-repeat: no-repeat;
+    float: right;
+}
+
+.rating input:checked ~ label,
+.rating input:checked ~ label ~ label {
+    background-image: url('../static/stars/star-outline-filled.png'); /* Filled star image */
+}
+
+    </style>
+</head>
+<body>
+    <h1>Rate the Product</h1>
+    <div class="rating">
+        <input type="radio" id="star5" name="rating" value="5">
+        <label for="star5"></label>
+        <input type="radio" id="star4" name="rating" value="4">
+        <label for="star4"></label>
+        <input type="radio" id="star3" name="rating" value="3">
+        <label for="star3"></label>
+        <input type="radio" id="star2" name="rating" value="2">
+        <label for="star2"></label>
+        <input type="radio" id="star1" name="rating" value="1">
+        <label for="star1"></label>
+    </div>
+    <br>
+    <button id="submitBtn">Submit Rating</button>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
