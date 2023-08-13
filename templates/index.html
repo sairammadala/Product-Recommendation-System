@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <title>Product</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #fbeeaf;
+        margin: 0;
+        padding: 0;
+      }
+      
+      .form {
+        display: flex;
+        justify-content: center;
+        margin: 50px 0;
+        animation: formAnimation 0.5s ease-in-out;
+      }
+      
+      .form-control {
+        width: 300px;
+        height: 40px;
+        font-size: 16px;
+        border-radius: 20px;
+        border: none;
+        padding: 10px;
+        animation: inputAnimation 0.5s ease-in-out;
+      }
+      
+      .btn-outline-success {
+        height: 40px;
+        font-size: 16px;
+        border-radius: 20px;
+        border: none;
+        padding: 10px 20px;
+        background-color: #f4976c;
+        color: white;
+        transition: background-color 0.3s;
+        animation: buttonAnimation 0.5s ease-in-out;
+      }
+      
+      .btn-outline-success:hover {
+        background-color: #e86945; 
+      }
+      
+      .container {
+        margin-bottom: 50px;
+      }
+      
+      .column {
+        margin-bottom: 30px;
+      }
+      
+      .card {
+        border: none;
+        border-radius: 10px;
+        background-color: #ffffff;
+        transition: transform 0.3s;
+        animation: cardAnimation 0.5s ease-in-out;
+      }
+      
+      .card:hover {
+        transform: translateY(-5px);
+      }
+      
+      .card-img-top {
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px; 
+      }
+      
+      .card-title {
+        text-align: center;
+        background-color: #f4976c; 
+        color: white;
+        padding: 10px;
+        border-radius: 0 0 10px 10px;
+        font-size: 16px;
+        margin-bottom: 0;
+      }
+      
+      .card-body {
+        text-align: center;
+        padding: 20px;
+      }
+      
+      @keyframes formAnimation {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes inputAnimation {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes buttonAnimation {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      @keyframes cardAnimation {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+</head>
+<body>
+  <form class="form" action="/index" method="POST" class="d-flex">
+    <input class="form-control me-2" name="search_text" type="search" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+
+  <div class="container">
+    {% if product_images %}
+    <div class="row">
+      <div class="column col-md-4">
+        <div class="card">
+          <img src="{{ product_images[picked_product] }}" width="100%" height="200px" class="card-img-top" alt="..." style="animation: cardAnimation 0.5s ease-in-out;">
+          <div class="card-body">
+            <h5 class="card-title">{{ picked_product }}</h5>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% for product in recommended_product %}
+      <div class="column col-md-4">
+        <div class="card">
+          <img src="{{ product_images[product] }}" width="100%" height="200px" class="card-img-top" alt="..." style="animation: cardAnimation 0.5s ease-in-out;">
+          <div class="card-body">
+            <h5 class="card-title">{{ product }}</h5>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIF"></script>
+</body>
+</html>
