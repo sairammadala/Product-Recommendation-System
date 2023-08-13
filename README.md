@@ -82,6 +82,7 @@
   <li>NumPy</li>
   <li>SciPy</li>
   <li>Bootstrap</li>
+  <li>surprise</li>
 </ul>
 
 <h2>Contact</h2>
