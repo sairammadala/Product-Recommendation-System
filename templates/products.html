@@ -163,39 +163,13 @@
   </form>
 
   <div class="container">
-    {% if product_images %}
     <div class="row">
+      {% for product_id in recommended_product %}
       <div class="column col-md-4">
         <div class="card">
-          <img src="{{ product_images[picked_product] }}" width="100%" height="200px" class="card-img-top" alt="..." style="animation: cardAnimation 0.5s ease-in-out;">
+          <img src="{{ product_images[product_id] }}" width="100%" height="200px" class="card-img-top" alt="..." style="animation: cardAnimation 0.5s ease-in-out;">
           <div class="card-body">
-            <h5 class="card-title">{{ picked_product }}</h5>
-            <div class="rating">
-              <form method="post" action="{{ url_for('search_recommand') }}">
-                  <input type="hidden" name="search_text" value="{{ picked_product }}">
-                  <input type="hidden" name="product" value="{{ picked_product }}">
-                  <input type="radio" id="{{ picked_product }}-star5" name="{{ picked_product }}-rating" value="5" onchange="this.form.submit()">
-                  <label for="{{ picked_product }}-star5"></label>
-                  <input type="radio" id="{{ picked_product }}-star4" name="{{ picked_product }}-rating" value="4" onchange="this.form.submit()">
-                  <label for="{{ picked_product }}-star4"></label>
-                  <input type="radio" id="{{ picked_product }}-star3" name="{{ picked_product }}-rating" value="3" onchange="this.form.submit()">
-                  <label for="{{ picked_product }}-star3"></label>
-                  <input type="radio" id="{{ picked_product }}-star2" name="{{ picked_product }}-rating" value="2" onchange="this.form.submit()">
-                  <label for="{{ picked_product }}-star2"></label>
-                  <input type="radio" id="{{ product }}-star1" name="{{ picked_product }}-rating" value="1" onchange="this.form.submit()">
-                  <label for="{{ picked_product }}-star1"></label>
-              </form>
-          </div>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-      {% for product in recommended_product %}
-      <div class="column col-md-4">
-        <div class="card">
-          <img src="{{ product_images[product] }}" width="100%" height="200px" class="card-img-top" alt="..." style="animation: cardAnimation 0.5s ease-in-out;">
-          <div class="card-body">
-            <h5 class="card-title">{{ product }}</h5>
+            <h5 class="card-title">{{ recommended_product[product_id] }}</h5>
             <div class="rating">
               <form method="post" action="{{ url_for('search_recommand') }}">
                   <input type="hidden" name="search_text" value="{{ picked_product }}">
