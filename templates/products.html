@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
     <title>Product</title>
     <style>
       body {
@@ -13,14 +18,14 @@
         margin: 0;
         padding: 0;
       }
-      
+
       .form {
         display: flex;
         justify-content: center;
         margin: 50px 0;
         animation: formAnimation 0.5s ease-in-out;
       }
-      
+
       .form-control {
         width: 300px;
         height: 40px;
@@ -30,7 +35,7 @@
         padding: 10px;
         animation: inputAnimation 0.5s ease-in-out;
       }
-      
+
       .btn-outline-success {
         height: 40px;
         font-size: 16px;
@@ -42,19 +47,19 @@
         transition: background-color 0.3s;
         animation: buttonAnimation 0.5s ease-in-out;
       }
-      
+
       .btn-outline-success:hover {
-        background-color: #e86945; 
+        background-color: #e86945;
       }
-      
+
       .container {
         margin-bottom: 50px;
       }
-      
+
       .column {
         margin-bottom: 30px;
       }
-      
+
       .card {
         border: none;
         border-radius: 10px;
@@ -62,32 +67,32 @@
         transition: transform 0.3s;
         animation: cardAnimation 0.5s ease-in-out;
       }
-      
+
       .card:hover {
         transform: translateY(-5px);
       }
-      
+
       .card-img-top {
         height: 200px;
         object-fit: cover;
-        border-radius: 10px; 
+        border-radius: 10px;
       }
-      
+
       .card-title {
         text-align: center;
-        background-color: #f4976c; 
+        background-color: #f4976c;
         color: white;
         padding: 10px;
         border-radius: 0 0 10px 10px;
         font-size: 16px;
         margin-bottom: 0;
       }
-      
+
       .card-body {
         text-align: center;
         padding: 20px;
       }
-      
+
       @keyframes formAnimation {
         from {
           opacity: 0;
@@ -98,7 +103,7 @@
           transform: translateY(0);
         }
       }
-      
+
       @keyframes inputAnimation {
         from {
           opacity: 0;
@@ -109,7 +114,7 @@
           transform: translateY(0);
         }
       }
-      
+
       @keyframes buttonAnimation {
         from {
           opacity: 0;
@@ -120,7 +125,7 @@
           transform: translateY(0);
         }
       }
-      
+
       @keyframes cardAnimation {
         from {
           opacity: 0;
@@ -133,66 +138,199 @@
       }
 
       .rating {
-          display: inline-block;
+        display: inline-block;
       }
 
       .rating input {
-          display: none;
+        display: none;
       }
 
       .rating label {
-          cursor: pointer;
-          width: 30px;
-          height: 30px;
-          background-image: url('../static/stars/empty_star.png'); /* Empty star image */
-          background-size: cover;
-          background-repeat: no-repeat;
-          float: right;
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        background-image: url("../static/stars/empty_star.png"); /* Empty star image */
+        background-size: cover;
+        background-repeat: no-repeat;
+        float: right;
       }
 
       .rating input:checked ~ label,
       .rating input:checked ~ label ~ label {
-          background-image: url('../static/stars/star-outline-filled.png'); /* Filled star image */
+        background-image: url("../static/stars/star-outline-filled.png"); /* Filled star image */
       }
     </style>
-</head>
-<body>
-  <form class="form" action="/index" method="POST" class="d-flex">
-    <input class="form-control me-2" name="search_text" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success" type="submit">Search</button>
-  </form>
+  </head>
+  <body>
+    <form class="form" action="/search" method="POST" class="d-flex">
+      <input
+        class="form-control me-2"
+        name="search_text"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="btn btn-outline-success" type="submit">Search</button>
+    </form>
 
-  <div class="container">
-    <div class="row">
-      {% for product_id in recommended_product %}
-      <div class="column col-md-4">
-        <div class="card">
-          <img src="{{ product_images[product_id] }}" width="100%" height="200px" class="card-img-top" alt="..." style="animation: cardAnimation 0.5s ease-in-out;">
-          <div class="card-body">
-            <h5 class="card-title">{{ recommended_product[product_id] }}</h5>
-            <div class="rating">
-              <form method="post" action="{{ url_for('search_recommand') }}">
-                  <input type="hidden" name="search_text" value="{{ picked_product }}">
-                  <input type="hidden" name="product" value="{{ product }}">
-                  <input type="radio" id="{{ product }}-star5" name="{{ product }}-rating" value="5" onchange="this.form.submit()">
-                  <label for="{{ product }}-star5"></label>
-                  <input type="radio" id="{{ product }}-star4" name="{{ product }}-rating" value="4" onchange="this.form.submit()">
-                  <label for="{{ product }}-star4"></label>
-                  <input type="radio" id="{{ product }}-star3" name="{{ product }}-rating" value="3" onchange="this.form.submit()">
-                  <label for="{{ product }}-star3"></label>
-                  <input type="radio" id="{{ product }}-star2" name="{{ product }}-rating" value="2" onchange="this.form.submit()">
-                  <label for="{{ product }}-star2"></label>
-                  <input type="radio" id="{{ product }}-star1" name="{{ product }}-rating" value="1" onchange="this.form.submit()">
-                  <label for="{{ product }}-star1"></label>
-              </form>
-          </div>
+    <div class="container">
+      <div class="row">
+        {% for product_id in recommended_product %}
+        <div class="column col-md-4">
+          <div class="card">
+            <img
+              src="{{ product_images[product_id] }}"
+              width="100%"
+              height="200px"
+              class="card-img-top"
+              alt="..."
+              style="animation: cardAnimation 0.5s ease-in-out"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ recommended_product[product_id] }}</h5>
+              <div class="rating">
+                <form method="post" action="{{ url_for('search_recommand') }}">
+                  <input
+                    type="hidden"
+                    name="search_text"
+                    value="{{ picked_product }}"
+                  />
+                  <input
+                    type="hidden"
+                    name="product_id"
+                    value="{{ product_id }}"
+                  />
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star5"
+                    name="{{ product_id }}-rating"
+                    value="5"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star5"></label>
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star4"
+                    name="{{ product_id }}-rating"
+                    value="4"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star4"></label>
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star3"
+                    name="{{ product_id }}-rating"
+                    value="3"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star3"></label>
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star2"
+                    name="{{ product_id }}-rating"
+                    value="2"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star2"></label>
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star1"
+                    name="{{ product_id }}-rating"
+                    value="1"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star1"></label>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
+        {% endfor %}
       </div>
-      {% endfor %}
     </div>
-  </div>
-  
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIF"></script>
-</body>
+
+    <h1>Users also search for:</h1>
+    <div class="container">
+      <div class="row">
+        {% for product_id in related_product_names %}
+        <div class="column col-md-4">
+          <div class="card">
+            <img
+              src="{{ related_product_images[product_id] }}"
+              width="100%"
+              height="200px"
+              class="card-img-top"
+              alt="..."
+              style="animation: cardAnimation 0.5s ease-in-out"
+            />
+            <div class="card-body">
+              <h5 class="card-title">
+                {{ related_product_names[product_id] }}
+              </h5>
+              <div class="rating">
+                <form method="post" action="{{ url_for('search_recommand') }}">
+                  <input
+                    type="hidden"
+                    name="search_text"
+                    value="{{ picked_product }}"
+                  />
+                  <input
+                    type="hidden"
+                    name="product_id"
+                    value="{{ product_id }}"
+                  />
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star5"
+                    name="{{ product_id }}-rating"
+                    value="5"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star5"></label>
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star4"
+                    name="{{ product_id }}-rating"
+                    value="4"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star4"></label>
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star3"
+                    name="{{ product_id }}-rating"
+                    value="3"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star3"></label>
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star2"
+                    name="{{ product_id }}-rating"
+                    value="2"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star2"></label>
+                  <input
+                    type="radio"
+                    id="{{ product_id }}-star1"
+                    name="{{ product_id }}-rating"
+                    value="1"
+                    onchange="this.form.submit()"
+                  />
+                  <label for="{{ product_id }}-star1"></label>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ENjdO4Dr2bkBIF"
+    ></script>
+  </body>
 </html>
