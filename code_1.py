@@ -159,7 +159,7 @@ def recommend_product_based_on_product(picked_product):
         [i, score] for i, score in enumerate(cosine_sim_keywords) if score > 0
     ]
 
-    sorted(keyword_matching_indices, key=lambda x: x[1], reverse=True)
+    keyword_matching_indices = sorted(keyword_matching_indices, key=lambda x: x[1], reverse=True)
 
     recommended_items = pd.DataFrame(columns=df.columns)
 
@@ -171,6 +171,7 @@ def recommend_product_based_on_product(picked_product):
     for i in keyword_matching_indices:
         keyword_matching_categories.append(df.iloc[i[0]]["category"])
     related_items = get_related_items(keyword_matching_categories[0])
+    print(recommended_items)
 
     return [recommended_items[:100], related_items]
 
