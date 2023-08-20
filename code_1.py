@@ -17,42 +17,6 @@ from surprise import Dataset, Reader
 from surprise.model_selection import train_test_split
 from surprise import KNNBasic  # Using user-based k-Nearest Neighbors
 
-
-# Rating datasetwu
-# Read And Handling missing values
-# ratings = pd.read_csv("rating.csv")
-
-# read product and merging dataset with rating
-# product = pd.read_csv("product.csv")
-# df = pd.merge(ratings,product, on= "ProductId" , how="inner")
-
-
-# #product with over 20 ratings
-# agg_ratings= df.groupby("productName").agg(mean_ratings = ('rating' ,'mean'),
-#                                         num_of_rating=('rating' , 'count')).reset_index()
-
-# agg_ratings_GT20 = agg_ratings[agg_ratings['num_of_rating'] >1]
-# agg_ratings_GT20.sort_values(by= 'num_of_rating' , ascending=False)
-# df_GT20 = pd.merge(df,agg_ratings_GT20[['productName']] , on = 'productName' , how = 'inner')
-
-# #matrix
-# matrix = df_GT20.pivot_table(index= 'productName' , columns='UserId' , values= 'rating' )
-# print("/--------------------------------------------------------------------------------------------------")
-# #data normalization
-# matrix_norm = matrix.subtract(matrix.mean(axis= 1),axis = 'rows')
-# #identify similar user
-# item_similarity= matrix_norm.T.corr()
-
-# #print(matrix_norm.columns)
-# picked_product= 'Apple'
-# # Loop through not purchase product
-# for picked_userid in matrix_norm.columns:
-#         if pd.notnull(matrix_norm.loc[picked_product, picked_userid]):
-#             # product that the target user has purchase
-#             picked_userid_purchase = pd.DataFrame(matrix_norm[picked_userid].dropna(axis=0, how='all') \
-#                                                  .sort_values(ascending=False)) \
-#                                     .reset_index() \
-#                                     .rename(columns={picked_userid: 'rating'})
 df = pd.read_csv("./dataset-itembased.csv")
 tfidf_vectorizer = TfidfVectorizer(stop_words="english")
 tfidf_matrix = tfidf_vectorizer.fit_transform(df["description"])
@@ -108,43 +72,45 @@ def recommend_product_based_on_user(user_id):
     num_neighbors = 30
 
     # Find similar users to the target user
-    similar_users = model.get_neighbors(trainset.to_inner_uid(user_id), k=num_neighbors)
-
-    # Collect the items that the similar users have interacted with but the target user hasn't
-    user_items = df[df["userID"] == user_id]["itemID"]
-    items_to_recommend = set()
-    for neighbor_user_id in similar_users:
-        neighbor_items = df[df["userID"] == trainset.to_raw_uid(neighbor_user_id)][
-            "itemID"
-        ]
-        items_to_recommend.update(neighbor_items)
-
-    items_to_recommend = list(items_to_recommend - set(user_items))
-
-    # Predict ratings for items and sort predictions
-    predictions = [
-        (item, model.predict(user_id, item).est) for item in items_to_recommend
-    ]
-    predictions.sort(key=lambda x: x[1], reverse=True)
-
-    # Get the top recommended items
-    top_recommendations = predictions[:]
-
     user_product_names = {}
     user_product_images = {}
     user_product_cost = {}
+    try:
+        similar_users = model.get_neighbors(trainset.to_inner_uid(user_id), k=num_neighbors)
 
-    # Print the top recommendations
-    for item, estimated_rating in top_recommendations:
-        user_product_names[item] = df_itembased.loc[
-            df_itembased["itemID"] == item, "product_name"
-        ].values[0]
-        user_product_images[item] = df_itembased.loc[
-            df_itembased["itemID"] == item, "img_link"
-        ].values[0]
-        user_product_cost[item] = df_itembased.loc[
-            df_itembased["itemID"] == item, "cost"
-        ].values[0][3:]
+    # Collect the items that the similar users have interacted with but the target user hasn't
+        user_items = df[df["userID"] == user_id]["itemID"]
+        items_to_recommend = set()
+        for neighbor_user_id in similar_users:
+            neighbor_items = df[df["userID"] == trainset.to_raw_uid(neighbor_user_id)][
+                "itemID"
+            ]
+            items_to_recommend.update(neighbor_items)
+
+        items_to_recommend = list(items_to_recommend - set(user_items))
+
+        # Predict ratings for items and sort predictions
+        predictions = [
+            (item, model.predict(user_id, item).est) for item in items_to_recommend
+        ]
+        predictions.sort(key=lambda x: x[1], reverse=True)
+
+        # Get the top recommended items
+        top_recommendations = predictions[:]
+
+        # Print the top recommendations
+        for item, estimated_rating in top_recommendations:
+            user_product_names[item] = df_itembased.loc[
+                df_itembased["itemID"] == item, "product_name"
+            ].values[0]
+            user_product_images[item] = df_itembased.loc[
+                df_itembased["itemID"] == item, "img_link"
+            ].values[0]
+            user_product_cost[item] = df_itembased.loc[
+                df_itembased["itemID"] == item, "cost"
+            ].values[0][3:]
+    except:
+        pass
 
     return [user_product_images, user_product_names, user_product_cost]
 
@@ -170,7 +136,10 @@ def recommend_product_based_on_product(picked_product):
     keyword_matching_categories = []
     for i in keyword_matching_indices:
         keyword_matching_categories.append(df.iloc[i[0]]["category"])
-    related_items = get_related_items(keyword_matching_categories[0])
+    if len(keyword_matching_categories)!=0:
+        related_items = get_related_items(keyword_matching_categories[0])
+    else:
+        related_items = get_related_items("Electronics")
     print(recommended_items)
 
     return [recommended_items[:100], related_items]
@@ -202,13 +171,24 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        users = pd.read_csv("./dataset-users.csv")
+        print(users["username"]==username)
+        print(users["password"]==password)
+        print(password)
+        matching_rows = users[(users["username"] == username) & (users["password"] == password)]
+        print("matching", matching_rows)
         if (
-            username in user_name_id
-            and user_id_pass[user_name_id[username]] == password
+            (username in user_name_id
+            and user_id_pass[user_name_id[username]] == password)
+            or (not matching_rows.empty)
         ):
             # Successful login
             session["username"] = username
-            session["userid"] = user_name_id[username]
+            if not matching_rows.empty:
+                user_id = matching_rows.iloc[0]["userID"]
+                session["userid"] = user_id
+            else:
+                session["userid"] = user_name_id[username]
             return redirect(url_for("index"))
         else:
             # Invalid credentials
@@ -401,6 +381,12 @@ def update_cart(product_id, product_name, product_img, user_id, product_cost):
 @app.route("/index", methods=["GET", "POST"])
 def index():
     images, names, cost = recommend_product_based_on_user(session["userid"])
+    if not images and not names and not cost:
+        related_items = get_related_items("Electronics")
+        for index, row in related_items.iterrows():
+            images[row["itemID"]] = row["img_link"]
+            names[row["itemID"]] = row["product_name"]
+            cost[row["itemID"]] = row["cost"][3:]
 
     if request.form.get("product_id"):
         rated_product = request.form.get("product_id")
@@ -426,10 +412,6 @@ def index():
 
 @app.route("/search", methods=["GET", "POST"])
 def search_recommand():
-    # reading product.csv to get ids
-    dataframe = pd.read_csv("product.csv")
-    product_ids_dict = dataframe.set_index("productName")["ProductId"].to_dict()
-    # print(product_ids_dict)
     if request.method == "POST":
         search = request.form["search_text"]
         print("search", search)
@@ -487,7 +469,6 @@ def search_recommand():
             "products.html",
             recommended_product=recommended_product_names,
             product_images=product_images,
-            product_ids_dict=product_ids_dict,
             related_product_images=related_product_images,
             related_product_names=related_product_names,
             picked_product=search,
