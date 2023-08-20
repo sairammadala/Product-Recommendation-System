@@ -79,7 +79,7 @@
 
 <h2>Contact</h2>
 
-<p>For any inquiries or questions, please contact <a href="mailto:your-email@example.com">your-email@example.com</a>.</p>
+<p>For any inquiries or questions, please contact <a href="mailto:sairammadala7101@gmail.com">sairammadala7101@gmail.com</a>.</p>
 Feel free to use this HTML code and modify it according to your needs.
 
 
