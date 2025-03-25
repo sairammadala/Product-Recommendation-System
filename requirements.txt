@@ -1,7 +1,7 @@
 pip==23.0.1
-setuptools>=42
+setuptools==67.6.1
 wheel
-Cython
+Cython==0.29.36
 Flask==2.3.2
 Jinja2==3.1.2
 MarkupSafe==2.1.3
